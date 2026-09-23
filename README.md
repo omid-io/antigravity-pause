@@ -72,8 +72,8 @@ Unlike simple CLI tools or stateless chat interfaces that send isolated HTTP req
 ```
 [Antigravity 2.0 UI / Chat]
         │
-        ├──► /pause       ──► Radio silence: puts subagents into light sleep (preserves RAM state)
-        ├──► /play        ──► Pre-flight probe (<200ms) tests Gemini API & GeoIP before unfreezing
+        ├──► /pause       ──► Radio silence + local background sentinel (auto-wakes agent when VPN reconnects)
+        ├──► /play        ──► Manual instant resume + <200ms anti-leak pre-flight probe
         │
         ├──► /hibernate   ──► Atomic disk checkpoint + frees git locks + clean process exit
         ├──► /continue    ──► Out-of-band network check + rehydrates subagents from exact next step
@@ -91,8 +91,8 @@ Once installed, typing `/` in your Antigravity chat exposes these native skills:
 
 | Command | Action in Antigravity | When to Use |
 | :---: | :--- | :--- |
-| **`/pause`** | Initiates **Hot Standby**: halts all outgoing network requests and places subagents in standby without closing processes. | When switching VPN servers, toggling Wi-Fi, or putting laptop to sleep. |
-| **`/play`** | Executes `<200ms` pre-flight probe. If safe (non-IR IP), resumes execution instantly from the next pending step. | Right after your VPN reconnects to continue work. |
+| **`/pause`** | Initiates **Hot Standby & Auto-Sentinel**: halts all outgoing network requests, puts subagents in standby, and runs a silent local background watcher that automatically wakes the agent up the moment your VPN reconnects. | When switching VPN servers, toggling Wi-Fi, or putting laptop to sleep. |
+| **`/play`** | Executes `<200ms` pre-flight probe. If safe (non-IR IP), resumes execution instantly from the next pending step (manual resume). | Whenever you want to resume immediately without waiting for auto-sentinel. |
 | **`/hibernate`** | Saves an atomic snapshot of active task, subagent states, and cleans up `.git/index.lock` before closing. | Before shutting down PC or closing Antigravity completely. |
 | **`/continue`** | Rehydrates previous session state, verifies connection integrity, and resumes multi-agent workflows. | In a fresh Antigravity window after restarting your PC. |
 | **`/killswitch`** | Configures Windows Firewall Outbound Block rules for Antigravity on physical network adapters. | To permanently prevent Iran IP leaks when VPN TUN drops. |
@@ -157,7 +157,8 @@ antigravity-pause/
 │   ├── network_probe.py      # Sub-second (<200ms) anti-leak probe for Google AI endpoints
 │   ├── engine.py             # Atomic checkpointing & state persistence
 │   ├── process_guard.py      # Safe subagent freezing and git lock cleanup
-│   └── kill_switch.py        # Windows Firewall Outbound Kill Switch engine
+│   ├── kill_switch.py        # Windows Firewall Outbound Kill Switch engine
+│   └── sentinel.py           # Silent local auto-resume background sentinel
 ├── skills/
 │   ├── pause/SKILL.md        # /pause and /play skill definitions for Antigravity
 │   ├── hibernate/SKILL.md    # /hibernate and /continue skill definitions for Antigravity
@@ -211,8 +212,8 @@ This project is licensed under the [MIT License](LICENSE). Free and open-source 
 
 | قابلیت | عملکرد در Antigravity | دستور |
 | :--- | :--- | :---: |
-| **ایست گرم (Hot Standby)** | سکوت رادیویی و خواب سبک والد و ساب‌ایجنت‌ها بدون بستن پروسه‌ها یا هدررفت حافظه RAM. | `/pause` |
-| **ادامه امن (Safe Resume)** | پروب ۲۰۰ میلی‌ثانیه‌ای سلامت اتصال و ضد نشت آی‌پی + ادامه فوری کار از گام بعدی. | `/play` |
+| **ایست گرم و پایش خودکار (Auto-Sentinel)** | سکوت رادیویی + اجرای دیمن پس‌زمینه که به محض اتصال مجدد VPN، خودکار ایجنت را بیدار می‌کند. | `/pause` |
+| **ادامه دستی (Manual Resume)** | پروب ۲۰۰ میلی‌ثانیه‌ای سلامت اتصال و ضد نشت آی‌پی + ادامه فوری کار بدون معطلی. | `/play` |
 | **خواب عمیق (Hibernation)** | ثبت اتمیک وضعیت روی دیسک، پاکسازی قفل‌های گیت و بستن تمیز برنامه‌ها. | `/hibernate` |
 | **بازیابی خودکار (Restore)** | لود آخرین چک‌پوینت و ادامه پروژه دقیقاً از گام بعدی در سشن جدید. | `/continue` |
 | **کیل‌سوئیچ فایروال (Kill Switch)** | مسدودسازی ترافیک Antigravity روی کارت فیزیکی جهت عدم نشت به ایران در قطع VPN. | `/killswitch` |

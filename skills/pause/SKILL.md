@@ -60,21 +60,25 @@ When the user types `/pause` (or "پاز کن", "صبر کن میخوام نت �
      - The current sub-task you were performing.
      - The immediate next action to execute upon waking up.
 
-3. **Cease Network Tool Calls (Radio Silence):**
-   - Do NOT run web searches, URLs, git fetch, or network commands.
-   - Do NOT start long-running background tasks.
+3. **Launch Auto-Resume Background Sentinel (Zero Internet Traffic):**
+   - Run the local sentinel via `run_command`:
+     ```powershell
+     python "E:\programming\Tools\antigravity-pause\cli.py" wait-for-resume --timeout 900
+     ```
+     *(Set `WaitMsBeforeAsync: 500` so it safely transitions into a background task).*
+   - This task runs **locally on the user's PC only** (zero requests to Gemini API) and monitors network transition.
 
 4. **Confirm to User in Clean Persian:**
-   Output this exact reassuring message to the user:
-   > ⏸️ **سیستم در حالت ایست گرم (Hot Standby) قرار گرفت.**
-   > - تمام ساب‌ایجنت‌ها و ابزارها به حالت سکوت رفتند (هیچ درخواستی به اینترنت ارسال نمی‌شود).
-   > - وضعیت جاری در حافظه حفظ شده است.
+   Output this reassuring message to the user:
+   > ⏸️ **سیستم در حالت ایست گرم و پایش هوشمند (Auto-Resume Standby) قرار گرفت.**
+   > - سوکت شبکه به طور ایمن بسته شد تا خطای ۴۰۳ یا قطع استریم رخ ندهد.
+   > - دیمن بیدارباش پس‌زمینه فعال شد و منتظر اتصال مجدد فیلترشکن شماست.
    > 
-   > 🟢 **اکنون با خیال راحت می‌توانید وی‌پی‌ان را عوض کنید، شبکه را تغییر دهید یا سیستم را Sleep کنید.**
-   > پس از برقراری اتصال، کافی است بنویسید: **`/play`** یا **`ادامه بده`**.
+   > 🟢 **اکنون با خیال راحت فیلترشکن را عوض کنید یا شبکه را تغییر دهید؛ به محض اتصال مجدد، سیستم به صورت خودکار بیدار شده و کار را ادامه می‌دهد.**
+   > *(همچنین در هر زمان می‌توانید با نوشتن `/play` سیستم را به صورت دستی ادامه دهید).*
 
 5. **Yield the Turn Immediately:**
-   - Stop calling any tools and end the turn.
+   - Stop calling any tools and end the turn. Antigravity will automatically wake up when the sentinel task completes!
 
 ---
 

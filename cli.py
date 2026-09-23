@@ -18,6 +18,7 @@ from core.network_probe import NetworkProbe, ProbeResult
 from core.engine import CheckpointEngine
 from core.process_guard import ProcessGuard
 from core.kill_switch import AntigravityKillSwitch
+from core.sentinel import NetworkSentinel
 
 
 def cmd_probe(args):
@@ -130,6 +131,22 @@ def cmd_killswitch(args):
     return 0
 
 
+def cmd_wait_for_resume(args):
+    data = NetworkSentinel.wait_for_safe_connection(
+        timeout_seconds=args.timeout,
+        poll_interval=args.interval,
+        stabilization_checks=args.stabilization,
+    )
+    if args.json:
+        print(json.dumps(data, ensure_ascii=False, indent=2))
+    else:
+        if data.get("success"):
+            print(f"\n[OK] {data.get('message')}")
+        else:
+            print(f"\n[TIMEOUT] {data.get('message')}")
+    return 0 if data.get("success") else 1
+
+
 def main():
     parser = argparse.ArgumentParser(description="antigravity-pause: Resilience, Checkpoint & Kill Switch CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -139,6 +156,14 @@ def main():
     p_probe.add_argument("--json", action="store_true", help="Output pure JSON")
     p_probe.add_argument("--timeout", type=float, default=3.0, help="Probe timeout in seconds")
     p_probe.set_defaults(func=cmd_probe)
+
+    # wait-for-resume (auto-wakeup sentinel)
+    p_sentinel = subparsers.add_parser("wait-for-resume", help="Block silently in local background until VPN reconnects safely")
+    p_sentinel.add_argument("--timeout", type=int, default=900, help="Max wait time in seconds (default: 900)")
+    p_sentinel.add_argument("--interval", type=float, default=1.5, help="Polling interval in seconds (default: 1.5)")
+    p_sentinel.add_argument("--stabilization", type=int, default=2, help="Consecutive OK checks needed (default: 2)")
+    p_sentinel.add_argument("--json", action="store_true", help="Output pure JSON")
+    p_sentinel.set_defaults(func=cmd_wait_for_resume)
 
     # killswitch
     p_ks = subparsers.add_parser("killswitch", help="Manage Windows Firewall Outbound Kill Switch for Antigravity")
