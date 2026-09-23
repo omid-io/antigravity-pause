@@ -17,6 +17,7 @@ if sys.stdout and hasattr(sys.stdout, "reconfigure"):
 from core.network_probe import NetworkProbe, ProbeResult
 from core.engine import CheckpointEngine
 from core.process_guard import ProcessGuard
+from core.kill_switch import AntigravityKillSwitch
 
 
 def cmd_probe(args):
@@ -84,8 +85,53 @@ def cmd_clean_locks(args):
     return 0
 
 
+def cmd_killswitch(args):
+    action = args.action
+    if action == "status":
+        data = AntigravityKillSwitch.get_status()
+        if args.json:
+            print(json.dumps(data, ensure_ascii=False, indent=2))
+            return 0
+        if data["kill_switch_enabled"]:
+            print(f"\n[ACTIVE] کیل‌سوئیچ فایروال روشن است (تعداد رول‌ها: {data['active_rules_count']})")
+            print(f"-> کارت‌های فیزیکی مسدودشده: {', '.join(data['physical_adapters'])}")
+            print(f"-> برنامه‌های محافظت‌شده: {len(data['protected_binaries'])} فایل اجرایی")
+        else:
+            print(f"\n[INACTIVE] کیل‌سوئیچ فایروال خاموش است.")
+            print(f"-> برای فعال‌سازی از دستور: python cli.py killswitch enable استفاده کنید.")
+        return 0
+
+    elif action == "enable":
+        data = AntigravityKillSwitch.enable()
+        if args.json:
+            print(json.dumps(data, ensure_ascii=False, indent=2))
+            return 0 if data.get("success") else 1
+        if data.get("success"):
+            print(f"\n[OK] {data.get('message')}")
+            return 0
+        else:
+            print(f"\n[ERROR] {data.get('message', 'خطا در فعال‌سازی')}")
+            if data.get("error") == "ADMIN_REQUIRED":
+                print("-> پیشنهاد: ترمینال را در حالت Run as Administrator اجرا کرده یا فایل enable_killswitch.bat را اجرا کنید.")
+            return 1
+
+    elif action == "disable":
+        data = AntigravityKillSwitch.disable()
+        if args.json:
+            print(json.dumps(data, ensure_ascii=False, indent=2))
+            return 0 if data.get("success") else 1
+        if data.get("success"):
+            print(f"\n[OK] {data.get('message')}")
+            return 0
+        else:
+            print(f"\n[ERROR] {data.get('message', 'خطا در غیرفعال‌سازی')}")
+            return 1
+
+    return 0
+
+
 def main():
-    parser = argparse.ArgumentParser(description="antigravity-pause: Resilience & Checkpoint CLI")
+    parser = argparse.ArgumentParser(description="antigravity-pause: Resilience, Checkpoint & Kill Switch CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # probe
@@ -93,6 +139,12 @@ def main():
     p_probe.add_argument("--json", action="store_true", help="Output pure JSON")
     p_probe.add_argument("--timeout", type=float, default=3.0, help="Probe timeout in seconds")
     p_probe.set_defaults(func=cmd_probe)
+
+    # killswitch
+    p_ks = subparsers.add_parser("killswitch", help="Manage Windows Firewall Outbound Kill Switch for Antigravity")
+    p_ks.add_argument("action", choices=["status", "enable", "disable"], help="Kill Switch operation (status, enable, disable)")
+    p_ks.add_argument("--json", action="store_true", help="Output pure JSON for agents / automation")
+    p_ks.set_defaults(func=cmd_killswitch)
 
     # checkpoint save
     p_save = subparsers.add_parser("checkpoint-save", help="Save active checkpoint atomically")
