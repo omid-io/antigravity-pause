@@ -61,16 +61,21 @@ This leads to:
 
 ---
 
-## 🚀 Quick Installation
+## 🚀 Installation / نحوه نصب
 
-### Windows 1-Click Setup (Recommended)
-Simply double-click `setup.bat` or run the following in your terminal:
+### 🤖 Method 1: Ask Your Antigravity Agent (Recommended)
+You can directly tell your Antigravity agent in any chat:
+> *"Please clone https://github.com/omid-io/antigravity-pause.git and run `python install.py` to enable /pause and /hibernate commands in my desktop."*
 
-```powershell
+### 💻 Method 2: Manual Terminal Setup
+```bash
+git clone https://github.com/omid-io/antigravity-pause.git
+cd antigravity-pause
 python install.py
 ```
+*(On Windows, you can simply double-click `setup.bat`).*
 
-The installer establishes native directory junctions directly inside your global Antigravity skills directory (`~/.gemini/config/skills/`), making slash commands immediately available across all your chats and workspaces.
+The installer dynamically resolves paths for your operating system (Windows, Linux, macOS), registers the chat slash actions in `~/.gemini/config/workflows/`, and links the background resilience skills into `~/.gemini/config/skills/`.
 
 ---
 
