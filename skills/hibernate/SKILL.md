@@ -57,11 +57,11 @@ When the user types `/hibernate` (or "سیستم رو میخوام خاموش ک
 2. **Serialize Checkpoint to Disk:**
    - Run the atomic checkpoint engine:
      ```powershell
-     python "E:\programming\antigravity-pause\cli.py" checkpoint-save --task "<CURRENT_OVERALL_GOAL>" --phase "<CURRENT_PHASE>" --last-step "<LAST_COMPLETED_ACTION>" --next-step "<EXACT_NEXT_TOOL_OR_ACTION>"
+     python "E:\programming\Tools\antigravity-pause\cli.py" checkpoint-save --task "<CURRENT_OVERALL_GOAL>" --phase "<CURRENT_PHASE>" --last-step "<LAST_COMPLETED_ACTION>" --next-step "<EXACT_NEXT_TOOL_OR_ACTION>"
      ```
 
 3. **Sanitize Locks:**
-   - Run `python "E:\programming\antigravity-pause\cli.py" clean-locks` to remove any accidental `.git/*.lock` files.
+   - Run `python "E:\programming\Tools\antigravity-pause\cli.py" clean-locks` to remove any accidental `.git/*.lock` files.
 
 4. **Gracefully Terminate Active Subagents:**
    - If any subagents are running, kill them via `manage_subagents(Action: "kill", ConversationIds: [...])` so they do not consume resources or hang in the background.
@@ -83,17 +83,17 @@ When the user types `/continue`, `/wakeup` (or "ادامه بده", "ریستو�
 
 1. **Run Out-of-Band Pre-Flight Probe:**
    ```powershell
-   python "E:\programming\antigravity-pause\cli.py" probe --json
+   python "E:\programming\Tools\antigravity-pause\cli.py" probe --json
    ```
    If status is `IP_LEAK_IRAN` or `NO_INTERNET`, stop and alert the user immediately without making LLM calls.
 
 2. **Load Active Checkpoint:**
    ```powershell
-   python "E:\programming\antigravity-pause\cli.py" checkpoint-load
+   python "E:\programming\Tools\antigravity-pause\cli.py" checkpoint-load
    ```
 
 3. **Check Dangling Locks:**
-   - Run `python "E:\programming\antigravity-pause\cli.py" clean-locks`.
+   - Run `python "E:\programming\Tools\antigravity-pause\cli.py" clean-locks`.
 
 4. **Rehydrate Subagents (if any were serialized):**
    - If the checkpoint lists subagents that were in progress, re-invoke them via `invoke_subagent` in a single batch call with explicit continuation prompts.

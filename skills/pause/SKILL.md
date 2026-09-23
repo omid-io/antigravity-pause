@@ -29,7 +29,7 @@ This skill provides seamless, zero-crash pausing and resuming for **Google Antig
 [User invokes /play or /resume]
         │
         ▼
-4. Pre-Flight Out-of-Band Probe ──► Run python E:\programming\antigravity-pause\cli.py probe
+4. Pre-Flight Out-of-Band Probe ──► Run python E:\programming\Tools\antigravity-pause\cli.py probe
         │
    ┌────┴──────────────────────────┐
    ▼                               ▼
@@ -85,7 +85,7 @@ When the user types `/play`, `/resume` (or "ادامه بده", "وصل شدم",
 1. **Run Pre-Flight Out-of-Band Leak Probe:**
    Execute the zero-risk CLI probe:
    ```powershell
-   python "E:\programming\antigravity-pause\cli.py" probe --json
+   python "E:\programming\Tools\antigravity-pause\cli.py" probe --json
    ```
 
 2. **Evaluate Probe Result:**
