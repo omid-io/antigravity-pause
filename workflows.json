@@ -1,0 +1,24 @@
+{
+  "workflows": [
+    {
+      "name": "pause",
+      "description": "ایست گرم و سکوت رادیویی جهت تغییر وی‌پی‌ان، تغییر شبکه یا Sleep",
+      "path": "workflows/pause.md"
+    },
+    {
+      "name": "play",
+      "description": "تست پروب ۲۰۰ میلی‌ثانیه‌ای سلامت اتصال و ضد نشت آی‌پی، و ادامه سریع کار",
+      "path": "workflows/play.md"
+    },
+    {
+      "name": "hibernate",
+      "description": "خواب عمیق دیسک، ثبت اتمیک چک‌پوینت و بستن تمیز برنامه‌ها برای خاموشی سیستم",
+      "path": "workflows/hibernate.md"
+    },
+    {
+      "name": "continue",
+      "description": "بررسی سلامت شبکه، لود چک‌پوینت ذخیره‌شده و ادامه هوشمندانه تسک از همان نقطه",
+      "path": "workflows/continue.md"
+    }
+  ]
+}
