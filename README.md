@@ -1,159 +1,139 @@
-# ⏸️ antigravity-pause
+<p align="center">
+  <img src="assets/banner.png" alt="antigravity-pause banner" width="100%" />
+</p>
 
-> **Graceful Pause, Deep Hibernation & Pre-Flight Leak Protection for Google Antigravity (2.0 Desktop, IDE, and CLI).**  
-> Protect your active AI agent sessions from `ECONNRESET`, geoblock `403 Forbidden` errors, orphaned processes, and corrupted Git locks during VPN switches, network changes, or system sleep. Includes an optional hardware-level **Windows Firewall Kill Switch** to block IP leaks when VPN TUN drops.
+<p align="center">
+  <strong>Graceful Standby, Deep Hibernation & Pre-Flight Leak Protection for Google Antigravity</strong>
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python: 3.10+](https://img.shields.io/badge/python-3.10+-brightgreen.svg)]()
-[![Platform: Windows%20%7C%20Linux%20%7C%20macOS](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)]()
-[![Antigravity: 2.0+ Compatible](https://img.shields.io/badge/Antigravity-2.0+-orange.svg)]()
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License: MIT" /></a>
+  <img src="https://img.shields.io/badge/Python-3.10+-3776AB.svg?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+" />
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg?style=flat-square" alt="Platform" />
+  <img src="https://img.shields.io/badge/Antigravity-2.0+-orange.svg?style=flat-square" alt="Antigravity 2.0+" />
+  <a href="#-راهنمای-فارسی"><img src="https://img.shields.io/badge/%D9%81%D8%A7%D8%B1%D8%B3%D9%8A-Persian-4B0082.svg?style=flat-square" alt="Persian Guide" /></a>
+</p>
 
-[English](#-antigravity-pause) | [فارسی (Persian)](#-راهنمای-فارسی)
-
----
-
-## ⚡ 1-Click Agent Install Prompt
-
-Simply copy and paste this single prompt directly into your Antigravity chat:
-
-```text
-Please clone https://github.com/omid-io/antigravity-pause.git and run python install.py to equip Antigravity with /pause, /play, /hibernate, and /killswitch skills.
-```
-
----
-
-## 🌍 The Problem
-
-Autonomous AI coding agents rely on continuous HTTP/2 connections and Server-Sent Event (SSE) streams. In volatile network environments—such as toggling corporate VPNs, switching between Wi-Fi and mobile hotspots, putting laptops to sleep, or operating in heavily geoblocked and censored regions (e.g. Iran)—any network transition abruptly breaks active TCP sockets.
-
-This leads to:
-* **Terminal Crashes (`ECONNRESET` / `Broken pipe`):** Live model streams drop immediately without saving intermediate progress.
-* **Geoblock Sanction Penalties (`403 Forbidden` / `FAILED_PRECONDITION`):** Brief IP leaks during VPN handshakes cause API gateways to blacklist the active session.
-* **Orphaned Background Subagents:** Background processes remain stuck consuming CPU and memory.
-* **Corrupted Git Locks:** Abrupt termination during write operations leaves behind unremovable `.git/index.lock` files, preventing future commits.
+<p align="center">
+  <a href="#-quick-agent-install">Quick Install</a> •
+  <a href="#-the-problem">The Problem</a> •
+  <a href="#-core-workflows">Workflows</a> •
+  <a href="#-hardware-kill-switch">Kill Switch</a> •
+  <a href="#-cli-reference">CLI</a> •
+  <a href="#-راهنمای-فارسی">راهنمای فارسی</a>
+</p>
 
 ---
 
-## 💡 The Solution
+## ⚡ Quick Agent Install
 
-**`antigravity-pause`** equips Antigravity with smart slash-command workflows:
+Install in 1 step by pasting this prompt directly into your Antigravity chat:
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                          1. Hot Standby (Zero-Kill)                         │
-│                                                                             │
-│   /pause       ──► Radio silence + light sleep for subagents (preserves RAM)│
-│   /play        ──► <200ms anti-leak pre-flight probe + instant resumption  │
-└─────────────────────────────────────────────────────────────────────────────┘
+> **Copy & Paste to Antigravity:**  
+> `Please clone https://github.com/omid-io/antigravity-pause.git and run python install.py to equip Antigravity with /pause, /play, /hibernate, and /killswitch skills.`
 
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                      2. Deep Hibernation (Disk Snapshot)                    │
-│                                                                             │
-│   /hibernate   ──► Atomic checkpoint saved + git locks freed + clean exit   │
-│   /continue    ──► Network probe verified + state rehydrated from next step │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│               3. Hardware-Level Kill Switch (Anti-Leak Firewall)            │
-│                                                                             │
-│   /killswitch  ──► Windows Firewall Outbound Block on physical adapters     │
-│                    (Wi-Fi, Ethernet). If VPN drops, 0 bytes leak to Iran ISP│
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## ⚡ Key Features
-
-1. **Sub-second Pre-Flight Leak Probe (`<200ms`):**
-   * High-speed, lightweight Python probe validates connectivity and verifies non-sanctioned geo-location before initiating any model requests. If an IP leak or network outage is detected, the agent safely holds back, avoiding `403 Forbidden` session drops.
-2. **Zero-Kill Hot Standby (`/pause`):**
-   * Sets parent agent and subagents into an idle `waiting_for_message` state without killing process trees. Preserves in-memory conversation context and zeroes network traffic while you switch VPN servers.
-3. **Atomic State Checkpointing (`/hibernate`):**
-   * Saves multi-agent progress, conversation metadata, and execution steps into an atomic JSON snapshot resistant to sudden power loss or reboots.
-4. **Hardware-Level Windows Firewall Kill Switch (`/killswitch`):**
-   * Optional manual toggle that creates Windows Defender Firewall Outbound Block rules for Antigravity processes on physical adapters (`Wi-Fi`, `Ethernet`). If your VPN TUN drops unexpectedly, Windows drops the packets locally at the kernel level—zero bytes leak to your local ISP.
-5. **Git Lock Sanitizer:**
-   * Automatically detects and removes orphaned `.git/index.lock` files caused by interrupted git commands.
-6. **Universal Compatibility & Machine-Friendly CLI:**
-   * Native plug-and-play support for **Antigravity 2.0 Desktop**, **Antigravity IDE**, and the **`agy` CLI**. All commands support `--json` for effortless subagent introspection.
-
----
-
-## 🚀 Installation
-
-### 🤖 Method 1: Ask Your Antigravity Agent (Recommended)
-Paste this into your Antigravity chat:
-> *"Please clone https://github.com/omid-io/antigravity-pause.git and run `python install.py` to enable /pause, /hibernate, and /killswitch in my environment."*
-
-### 💻 Method 2: Manual Terminal Setup
+Or run manually in your terminal:
 ```bash
 git clone https://github.com/omid-io/antigravity-pause.git
 cd antigravity-pause
 python install.py
 ```
-*(On Windows, you can simply double-click `setup.bat`).*
+*(On Windows, you can also simply double-click `setup.bat`).*
 
 ---
 
-## 🛡️ Windows Firewall Kill Switch Guide
+## 🌍 The Problem
 
-The Kill Switch is **strictly manual & optional** (disabled by default). Users outside restricted zones do not need it, while developers in Iran or geo-fenced environments can turn it on with one command.
+Autonomous AI coding agents rely on continuous HTTP/2 connections and Server-Sent Event (SSE) streams. In volatile network environments—such as toggling VPNs, switching between Wi-Fi and mobile hotspots, putting laptops to sleep, or operating in heavily geoblocked regions (e.g. Iran)—any network transition abruptly breaks active TCP sockets.
 
-### How to Control:
+| Failure Mode | Impact on Agent Session |
+| :--- | :--- |
+| **`ECONNRESET` / Broken pipe** | Live model streams drop immediately without saving intermediate progress. |
+| **`403 Forbidden` Geoblock** | Brief IP leaks during VPN handshakes cause API gateways to blacklist the active session. |
+| **Orphaned Subagents** | Background tasks get stuck in infinite retry loops, wasting memory and CPU cycles. |
+| **Dangling `.git/index.lock`** | Sudden session termination leaves unremovable Git lock files, blocking future commits. |
 
-#### Option A: Inside Antigravity Chat
-* `/killswitch status` — Check whether the firewall shield is active.
-* `/killswitch on` — Enable Outbound Block rules on Wi-Fi and Ethernet.
-* `/killswitch off` — Cleanly remove firewall rules and restore default routing.
+---
 
-#### Option B: Desktop 1-Click Batch Files
-* Double-click `enable_killswitch.bat` (requests Administrator permission and enables rules).
-* Double-click `disable_killswitch.bat` (removes rules).
+## 💡 Core Workflows
 
-#### Option C: CLI (Machine-Friendly for Agents)
-```powershell
-# Check status (pure JSON)
-python cli.py killswitch status --json
+`antigravity-pause` equips Antigravity with four coordinated resilience commands:
 
-# Enable rules
-python cli.py killswitch enable
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                               1. Hot Standby (Zero-Kill)                               │
+│                                                                                        │
+│   /pause       ──► Radio silence + light standby for subagents (RAM state preserved)   │
+│   /play        ──► <200ms anti-leak pre-flight probe + instant execution resumption    │
+└────────────────────────────────────────────────────────────────────────────────────────┘
 
-# Disable rules
-python cli.py killswitch disable
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                            2. Deep Hibernation (Disk Snapshot)                         │
+│                                                                                        │
+│   /hibernate   ──► Atomic checkpoint saved + git locks freed + clean process shutdown  │
+│   /continue    ──► Network verified + state rehydrated from the next sequential step   │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                        3. Hardware-Level Kill Switch (Firewall Shield)                 │
+│                                                                                        │
+│   /killswitch  ──► Windows Firewall Outbound Block on physical adapters (Wi-Fi, LAN)  │
+│                    If VPN TUN drops, Windows drops packets locally. 0 bytes leak.      │
+└────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📖 Everyday Scenarios
+## ⚡ Feature Matrix
 
-### Scenario 1: Switching VPN or Quick Laptop Sleep
-1. In your chat, type `/pause`. The agent enters radio silence.
-2. Toggle your VPN, change Wi-Fi, or put your laptop to sleep.
-3. Type `/play` (or say "continue"). The pre-flight probe verifies connection integrity and resumes the task instantly.
-
-### Scenario 2: System Shutdown or Closing Antigravity
-1. In your chat, type `/hibernate`. Subagents and tasks are saved into an atomic checkpoint.
-2. Shut down or reboot your PC.
-3. In a new session, type `/continue`. State rehydrates and continues from the next step.
+| Feature | Description | Command |
+| :--- | :--- | :---: |
+| **Pre-Flight Leak Probe** | Validates connectivity and verifies non-sanctioned geo-location in `<200ms` before any LLM API request. | `/play` |
+| **Zero-Kill Standby** | Suspends active subagents into an idle state without killing process trees. Zeroes network traffic while switching VPNs. | `/pause` |
+| **Atomic Checkpoint** | Saves multi-agent progress, conversation metadata, and execution steps into a crash-resilient JSON snapshot. | `/hibernate` |
+| **Firewall Kill Switch** | Blocks outbound traffic on physical adapters (`Wi-Fi`, `Ethernet`) to prevent Iran IP leaks when VPN drops. | `/killswitch` |
+| **Git Lock Sanitizer** | Automatically sweeps and removes dangling `.git/index.lock` files left behind by killed processes. | Automatic / CLI |
 
 ---
 
-## 🛠️ CLI Usage
+## 🛡️ Hardware Kill Switch (Optional & Manual)
 
-```powershell
-# Run the fast network & anti-leak probe
-python cli.py probe
+The Kill Switch is **strictly manual & optional** (disabled by default). International users outside restricted zones do not need it, while developers in Iran or geo-fenced environments can toggle it on with a single command.
 
-# Check Kill Switch status (formatted or JSON)
-python cli.py killswitch status
-python cli.py killswitch status --json
+### How to Toggle:
 
-# Clean lingering .git/index.lock files
-python cli.py clean-locks
+```text
+/killswitch status   ──► Check whether the firewall shield is active
+/killswitch on       ──► Enable Outbound Block rules on Wi-Fi and Ethernet
+/killswitch off      ──► Cleanly remove firewall rules and restore default routing
+```
 
-# Inspect the active checkpoint
-python cli.py checkpoint-load
+Or using desktop 1-click batch files:
+* Double-click **`enable_killswitch.bat`** (requests Administrator permission and enables rules).
+* Double-click **`disable_killswitch.bat`** (removes rules).
+
+---
+
+## 🖥️ Terminal Showcase
+
+Running the built-in diagnostic CLI:
+
+```text
+> python cli.py probe
+[OK] اتصال ایمن است (Latency: 142.1ms | IP: 185.112.82.148 | Country: FI)
+-> اتصال پایدار است و شرایط برای ارسال درخواست به هوش مصنوعی ۱۰۰٪ امن می‌باشد.
+
+> python cli.py killswitch status --json
+{
+  "kill_switch_enabled": true,
+  "active_rules_count": 4,
+  "physical_adapters": ["Ethernet", "Wi-Fi"],
+  "protected_binaries": [
+    "C:\\Users\\...\\Antigravity.exe",
+    "C:\\Users\\...\\language_server.exe"
+  ],
+  "message": "کیل‌سوئیچ فایروال فعال است: ترافیک اینترنت در صورت قطع VPN از کارت شبکه فیزیکی نشت نخواهد کرد."
+}
 ```
 
 ---
@@ -162,6 +142,8 @@ python cli.py checkpoint-load
 
 ```
 antigravity-pause/
+├── assets/
+│   └── banner.png            # Official repository banner
 ├── core/
 │   ├── network_probe.py      # Ultra-fast (<200ms) anti-leak network probe
 │   ├── engine.py             # Atomic checkpointing and state persistence
@@ -172,7 +154,7 @@ antigravity-pause/
 │   ├── hibernate/SKILL.md    # /hibernate and /continue skill definitions
 │   └── killswitch/SKILL.md   # /killswitch skill definition
 ├── cli.py                    # Standalone CLI diagnostic & agent control tool
-├── install.py                # Automated installer & skill linker
+├── install.py                # Automated installer & dynamic skill linker
 ├── setup.bat                 # 1-click Windows installer
 ├── enable_killswitch.bat     # 1-click elevated Kill Switch activation
 ├── disable_killswitch.bat    # 1-click elevated Kill Switch deactivation
@@ -199,60 +181,50 @@ This project is licensed under the [MIT License](LICENSE). Free and open-source 
 
 کافی است متن زیر را کپی کرده و در کادر چت Antigravity بفرستید:
 
-```text
-لطفاً ریپازیتوری https://github.com/omid-io/antigravity-pause.git را کلون کن و با اجرای دستور python install.py قابلیت‌های /pause، /play، /hibernate و /killswitch را روی سیستم من نصب و فعال کن.
-```
+> **متن آماده برای کپی به چت:**  
+> `لطفاً ریپازیتوری https://github.com/omid-io/antigravity-pause.git را کلون کن و با اجرای دستور python install.py قابلیت‌های /pause، /play، /hibernate و /killswitch را روی سیستم من نصب و فعال کن.`
 
 ---
 
 ### 🌍 مسأله چیست؟
-دستیارهای کدنویسی هوش مصنوعی به جریان‌های زنده HTTP/2 و Server-Sent Events (SSE) متکی هستند. در شرایط ناپایدار شبکه—مانند نیاز به تعویض سرور فیلترشکن، سوییچ بین وای‌فای و هات‌اسپات، اسلیپ کردن لپ‌تاپ یا قطع ناگهانی تونل VPN در ایران—هرگونه تغییر شبکه بلافاصله سوکت فعال را قطع می‌کند.
+دستیارهای کدنویسی هوش مصنوعی به سوکت‌های زنده HTTP/2 و استریم‌های متوالی متکی هستند. در شرایط ناپایدار شبکه ایران (قطع و وصل، تعویض سرور، اسلیپ کردن سیستم یا قطع ناگهانی تونل VPN)، سوکت بلافاصله قطع می‌شود و خطاهای زیر رخ می‌دهد:
 
-اگر فیلترشکن قطع شود، ویندوز به طور پیش‌فرض ترافیک را به کارت شبکه فیزیکی (وای‌فای/مودم ایران) می‌فرستد. در نتیجه پکت بعدی با آی‌پی ایران به گوگل رسیده و خطای **۴۰۳ Geoblock** سشن کاری را متوقف می‌کند.
-
----
-
-### 💡 راه‌حل
-ابزار **`antigravity-pause`** سه راهکار هماهنگ ارائه می‌دهد:
-
-1. **ایست گرم بدون بستن پروسه (Hot Standby):**
-   * `/pause`: سکوت رادیویی و خواب سبک والد و ساب‌ایجنت‌ها بدون بستن پروسه‌ها یا خالی شدن رم.
-   * `/play`: تست ۲۰۰ میلی‌ثانیه‌ای ضد نشت IP و ادامه فوری کار بدون هدررفت کانتکست.
-2. **خواب عمیق دیسک (Deep Hibernation):**
-   * `/hibernate`: ثبت اتمیک وضعیت، پاکسازی قفل‌های گیت و بستن تمیز برنامه‌ها برای خاموش کردن سیستم.
-   * `/continue`: تست اتصال، بازسازی وضعیت و ساب‌ایجنت‌ها و ادامه پروژه از گام بعدی.
-3. **کیل‌سوئیچ فایروال ویندوز (Windows Firewall Kill Switch):**
-   * `/killswitch`: مسدودسازی ترافیک خروجی Antigravity روی کارت‌های فیزیکی (`Wi-Fi` و `Ethernet`) در فایروال ویندوز. در صورت قطعی ناگهانی VPN، حتی یک بایت هم از اینترنت ایران خارج نمی‌شود و گوگل متوجه آی‌پی ایران نخواهد شد.
+1. **خطای قرمز `ECONNRESET`:** قطع شدن ناگهانی استریم و سوختن پاسخ در حال تولید.
+2. **خطای تحریم `403 Forbidden`:** سوئیچ خودکار ویندوز به کارت شبکه فیزیکی (مودم یا وای‌فای) هنگام قطع VPN و نشت آی‌پی ایران به سرورهای گوگل.
+3. **ساب‌ایجنت‌های معلق (Orphan Processes):** به دام افتادن پروسه‌ها در حلقه‌های تکرار بی‌پایان.
+4. **فایل‌های قفل خراب گیت:** باقی ماندن `.git/index.lock` به دلیل خروج ناگهانی حین عملیات نوشتن.
 
 ---
 
-### 🛡️ راهنمای فعال‌سازی دستی کیل‌سوئیچ (اختیاری)
+### 💡 راه‌حل‌های ۴گانه `antigravity-pause`
 
-این قابلیت **کاملاً اختیاری و دستی (Manual Toggle)** است تا کاربران بین‌المللی دچار محدودیت نشوند و برنامه‌نویسان داخل ایران بتوانند در صورت تمایل آن را روشن کنند.
+| قابلیت | عملکرد | دستور |
+| :--- | :--- | :---: |
+| **ایست گرم (Hot Standby)** | سکوت رادیویی و خواب سبک والد و ساب‌ایجنت‌ها بدون بستن پروسه‌ها یا خالی شدن رم. | `/pause` |
+| **ادامه امن (Safe Resume)** | پروب ۲۰۰ میلی‌ثانیه‌ای سلامت اتصال و ضد نشت آی‌پی + ادامه فوری کار. | `/play` |
+| **خواب عمیق (Hibernation)** | ثبت اتمیک وضعیت روی دیسک، پاکسازی قفل‌های گیت و بستن تمیز برنامه‌ها. | `/hibernate` |
+| **بازیابی خودکار (Restore)** | لود آخرین چک‌پوینت و ادامه پروژه دقیقاً از گام بعدی در سشن جدید. | `/continue` |
+| **کیل‌سوئیچ فایروال (Kill Switch)** | مسدودسازی ترافیک Antigravity روی وای‌فای و لن فیزیکی جهت عدم نشت به ایران در قطع VPN. | `/killswitch` |
 
-#### روش‌های کنترل:
+---
+
+### 🛡️ نحوه فعال‌سازی دستی کیل‌سوئیچ (کاملاً اختیاری)
+
+این ویژگی به صورت پیش‌فرض خاموش است تا برای کاربران خارجی محدودیتی ایجاد نکند. برای فعال‌سازی در ایران:
+
 * **در چت Antigravity:**
-  * تایپ `/killswitch on` یا `/killswitch enable` برای فعال‌سازی.
-  * تایپ `/killswitch off` یا `/killswitch disable` برای غیرفعال‌سازی.
-  * تایپ `/killswitch status` برای استعلام وضعیت.
-* **فایل‌های یک‌کلیکی ویندوز:**
-  * اجرای فایل `enable_killswitch.bat` برای روشن کردن.
-  * اجرای فایل `disable_killswitch.bat` برای خاموش کردن.
-* **خط‌فرمان (مخصوص اتوماسیون و ایجنت‌ها):**
+  * `/killswitch on` — فعال‌سازی سپر
+  * `/killswitch off` — غیرفعال‌سازی و بازگشت به حالت عادی
+  * `/killswitch status` — مشاهده وضعیت فعلی
+* **فایل‌های یک‌کلیکی دسکتاپ:**
+  * اجرای فایل `enable_killswitch.bat`
+  * اجرای فایل `disable_killswitch.bat`
+* **خط‌فرمان (مخصوص اتوماسیون):**
   ```powershell
   python cli.py killswitch status --json
   python cli.py killswitch enable
   python cli.py killswitch disable
   ```
-
----
-
-### 🚀 راهنمای نصب دستی
-در محیط ویندوز فایل `setup.bat` را اجرا کرده یا در ترمینال بزنید:
-
-```powershell
-python install.py
-```
 
 ---
 
